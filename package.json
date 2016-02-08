@@ -1,0 +1,31 @@
+{
+  "name": "node-docs-uml",
+  "version": "1.0.0",
+  "description": "Nodejs uml based on docs.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --reporter spec",
+    "integration": "./node_modules/.bin/mocha ./integration/integration.js --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vlad06/node-docs-uml.git"
+  },
+  "keywords": [
+    "uml",
+    "node",
+    "docs"
+  ],
+  "author": "Vladimir Filimon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vlad06/node-docs-uml/issues"
+  },
+  "homepage": "https://github.com/vlad06/node-docs-uml#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^5.2.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
+  }
+}
