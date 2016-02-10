@@ -4,61 +4,26 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 const sinon = require('sinon');
 
+const Module = require('../models/Module.js');
+const fakeData = require('./fakeData.js');
+
 const dataProvider = require('../data-provider.js');
 
-describe('data provider specs', function () {
+describe('data provider specs:', function () {
 
     it('fetch should retrieve docs', function () {
-        const expectedUrl = 'https://test.me';
+        const indexUrl = 'https://test.me/index.json';
+        const moduleUrl = 'https://test.me/http.json';
+        const expectedResult = [new Module(fakeData.moduleUrlResponse.modules[0])];
 
-        const response = {
-            "source": "doc/api/index.markdown",
-            "desc": [
-                {
-                    "type": "space"
-                },
-                {
-                    "type": "list_start",
-                    "ordered": false
-                },
-                {
-                    "type": "text",
-                    "text": "[File System](fs.html)"
-                },
-                {
-                    "type": "list_item_end"
-                },
-                {
-                    "type": "list_item_start"
-                },
-                {
-                    "type": "text",
-                    "text": "[Globals](globals.html)"
-                },
-                {
-                    "type": "list_item_end"
-                },
-                {
-                    "type": "list_item_start"
-                },
-                {
-                    "type": "text",
-                    "text": "[HTTP](http.html)"
-                },
-                {
-                    "type": "list_item_end"
-                }
-            ]
-        };
+        const fetchUrlStub = sinon.stub(dataProvider, 'fetchUrl');
+        fetchUrlStub.withArgs(indexUrl)
+          .returns(Promise.resolve(JSON.stringify(fakeData.indexUrlResponse)));
+        fetchUrlStub.withArgs(moduleUrl)
+          .returns(Promise.resolve(JSON.stringify(fakeData.moduleUrlResponse)));
 
-        const result = ['fs', 'globals', 'http'];
-
-
-        const fetchUrlStub = sinon.stub(dataProvider, 'fetchUrl')
-          .returns(Promise.resolve(JSON.stringify(response)));
-
-        return expect(dataProvider.fetch(expectedUrl)).to.eventually.eql(result).then(() => {
-            expect(fetchUrlStub.calledWith(expectedUrl), 'promise should be called with args').to.equal(true);
+        return expect(dataProvider.fetch(indexUrl)).to.eventually.eql(expectedResult).then(() => {
+            console.log('restoring stub...');
             fetchUrlStub.restore();
         })
 

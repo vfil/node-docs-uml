@@ -1,6 +1,8 @@
+//TODO too many methods...
 var Clazz = function (rawClass) {
     this._rawClazz = rawClass;
-    this.border = '+';
+    this.mainBorder = '+';
+    this.insideBorder = '-';
 };
 
 Clazz.prototype.getName = function() {
@@ -11,27 +13,27 @@ Clazz.prototype.getMethods = function() {
     return this._rawClazz.methods || [];
 };
 
-Clazz.prototype.printLine = function(length) {
-    const line =  Array(length + 1).join(this.border);
+Clazz.prototype.printLine = function(length, char) {
+    const line =  Array(length + 1).join(char);
     console.log(line);
 };
 
 Clazz.prototype.printHeader = function() {
-    this.printLine(this.getName().length);
     console.log(this.getName());
 };
 
 Clazz.prototype.printMethods = function() {
     this.getMethods().forEach((method) => {
-        this.printLine(this.getName().length);
+        this.printLine(this.getName().length, this.insideBorder);
         console.log(method.textRaw);
     });
-    this.printLine(this.getName().length);
 };
 
 Clazz.prototype.print = function() {
+    this.printLine(this.getName().length, this.mainBorder);
     this.printHeader();
     this.printMethods();
+    this.printLine(this.getName().length, this.mainBorder);
     console.log();
 };
 
