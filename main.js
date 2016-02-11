@@ -8,21 +8,26 @@ const indexUrl = 'https://nodejs.org/dist/latest-v5.x/docs/api/index.json';
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    completer: function(input) {
+    completer: function (input) {
         const suggestion = input || '';
-        return [dataProvider.getSuggestions(suggestion) , input];
+        return [dataProvider.getSuggestions(suggestion), input];
     }
 });
 
-rl.setPrompt('Global>');
 console.log('Loading docs...');
-//TODO make it async )))
-dataProvider.fetch(indexUrl).then((data) =>{
+dataProvider.fetch(indexUrl).then(() => {
+    rl.setPrompt(dataProvider.getContextName() + '>');
     rl.prompt();
     rl.on('line', (input) => {
-        const module = dataProvider.matchModule(input);
-        if(module) {
-            rl.setPrompt(module.getName() + '>');
+        const item = dataProvider.matchContext(input);
+        if (item) {
+            if (item.getType() === 'method') {
+                console.log(item.getDescription());
+            } else {
+                rl.setPrompt(item.getName() + '>');
+            }
+        } else {
+            console.log('Try TAB for suggestions!');
         }
         rl.prompt();
     });

@@ -1,23 +1,23 @@
 const https = require('https');
 
 const Module = require('./models/Module.js');
+const Global = require('./models/Global.js');
 
-module.exports = function() {
+module.exports = function () {
 
-    var _store = [];
     var _context = require('./models/Context.js');
 
     return {
         fetch: fetch,
-        matchModule: matchModule,
+        matchContext: matchContext,
         getSuggestions: getSuggestions,
+        getContextName: getContextName,
         fetchUrl: fetchUrl
     };
 
     function fetch(url) {
         return this.fetchUrl(url).then((response) => {
             const urls = extractUrls(JSON.parse(response));
-            const docs = {};
 
             //grab all docs resources as promises
             const promises = urls.map((slug) => {
@@ -29,79 +29,38 @@ module.exports = function() {
 
             //wait until all promises are resolved and flatten
             return batchPromises(promises).then((result) => {
-                _store = flatten(result);
-                return _store;
+                _context.push(new Global(flatten(result)));
             });
 
         });
     }
 
-
     function itemMatcher(input) {
         input = input.toLowerCase();
-        const container = _context.getCurrentContext() || _store;
-        return matchItem(container, input, function(item, input) {
+        const container = _context.peak();
+        return matchItem(container, input, function (item, input) {
             return item.getName().toLowerCase().startsWith(input);
         });
     }
 
-
-
     function matchItem(container, input, matcher) {
-
-        if(container.constructor !== Array) return [];
-
-        return container.filter((item) => {
+        return container.getSubtypes().filter((item) => {
             return matcher(item, input);
         });
     }
 
-    function matchModule(input) {
+    function matchContext(input) {
+        if (input == 'back' && !_context.isLast()) {
+            _context.pop();
+            return _context.peak();
+        }
         var matches = itemMatcher(input);
-        if(matches.length === 1) {
-            _context.setModule(matches[0]);
-            return matches[0];
-        }
-    }
-
-    //TODO refactor
-    function matchModule2(input) {
-        //module level
-        const matchedModule = _store.filter((module) => {
-            return moduleMatcher(module, input);
-        });
-
-        if(!_context.getModule()) {
-            _context.setModule(matchedModule.length === 1 ? matchedModule[0] : undefined);
-            return _context.getModule();
-        }
-
-        //classes level
-        const matchedClasses = _context.getModule().getClasses().filter((clazz) => {
-            return classMatcher(clazz, input);
-        });
-
-        if(!_context.getClass()) {
-            _context.setClass(matchedClasses.length === 1 ? matchedClasses[0] : undefined);
-            return _context.getModule();
-        }
-
-    }
-
-    function moduleMatcher(module, input) {
-        if(_context.getModule()) {
-            return _context.getModule() === module;
-        } else {
-            input = input.toLowerCase();
-            return module.getName().toLowerCase().startsWith(input);
-        }
-    }
-
-    function classMatcher(clazz, input) {
-        if(_context.getClass()) {
-            return _context.getClass() === clazz;
-        } else {
-            return clazz.getName().toLowerCase().startsWith(input);
+        if (matches.length === 1) {
+            const item = matches[0];
+            if (item.getType() !== 'method') {
+                _context.push(item);
+            }
+            return item;
         }
     }
 
@@ -111,21 +70,25 @@ module.exports = function() {
         });
     }
 
+    function getContextName() {
+        return _context.peak().getName();
+    }
+
     function fetchUrl(url) {
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var body = '';
 
-            const req = https.request(url, function(res) {
-                res.on('data', function(data) {
+            const req = https.request(url, function (res) {
+                res.on('data', function (data) {
                     body += data;
                 });
 
-                res.on('end', function() {
+                res.on('end', function () {
                     resolve(body);
                 });
             });
 
-            req.on('error', function(e) {
+            req.on('error', function (e) {
                 throw new Error('problem with request, error:' + e);
             });
 
@@ -139,10 +102,10 @@ module.exports = function() {
     }
 
     function reduceLinksFactory(regex) {
-        return function(prev, next) {
-            if(next.text) {
+        return function (prev, next) {
+            if (next.text) {
                 const slug = regex.exec(next.text)[1];
-                if(slug) {
+                if (slug) {
                     prev.push(slug);
                 }
             }
@@ -156,7 +119,7 @@ module.exports = function() {
     }
 
     function parsePage(section) {
-        if(section.modules) {
+        if (section.modules) {
             return section.modules.reduce((prev, next) => {
                 return prev.concat(buildModules(next));
             }, []);
@@ -177,11 +140,17 @@ module.exports = function() {
         //serialize promises result, after all completed return accumulator
         promises.forEach((promise) => {
             ready = ready
-              .then(() => { return promise; })
-              .then((value) => { accumulator.push(value); });
+              .then(() => {
+                  return promise;
+              })
+              .then((value) => {
+                  accumulator.push(value);
+              });
         });
 
-        return ready.then(() => { return accumulator; });
+        return ready.then(() => {
+            return accumulator;
+        });
     }
 
     function flatten(arr) {

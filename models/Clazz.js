@@ -1,40 +1,32 @@
-//TODO too many methods...
-var Clazz = function (rawClass) {
-    this._rawClazz = rawClass;
-    this.mainBorder = '+';
-    this.insideBorder = '-';
+const AbstractItem = require('./AbstractItem.js');
+const Method = require('./Method');
+
+const Clazz = function (rawClass) {
+    AbstractItem.call(this, rawClass);
 };
 
-Clazz.prototype.getName = function() {
-    return this._rawClazz.name;
-};
+Clazz.prototype = Object.create(AbstractItem.prototype);
 
-Clazz.prototype.getMethods = function() {
-    return this._rawClazz.methods || [];
-};
+Clazz.prototype.getMethods = function () {
+    if(!this._rawItem.methods) return [];
 
-Clazz.prototype.printLine = function(length, char) {
-    const line =  Array(length + 1).join(char);
-    console.log(line);
-};
-
-Clazz.prototype.printHeader = function() {
-    console.log(this.getName());
-};
-
-Clazz.prototype.printMethods = function() {
-    this.getMethods().forEach((method) => {
-        this.printLine(this.getName().length, this.insideBorder);
-        console.log(method.textRaw);
+    return this._rawItem.methods.map((rawMethod) => {
+        return new Method(rawMethod);
     });
 };
 
-Clazz.prototype.print = function() {
-    this.printLine(this.getName().length, this.mainBorder);
-    this.printHeader();
-    this.printMethods();
-    this.printLine(this.getName().length, this.mainBorder);
-    console.log();
+Clazz.prototype.getProperties = function () {
+    if(!this._rawItem.properties) return [];
+
+    return this._rawItem.methods.map((rawMethod) => {
+        return new Method(rawMethod);
+    });
 };
+
+Clazz.prototype.getSubtypes = function() {
+    return this.getMethods();
+};
+
+Clazz.prototype.constructor = Clazz;
 
 module.exports = Clazz;

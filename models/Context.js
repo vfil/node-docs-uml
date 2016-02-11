@@ -1,37 +1,27 @@
 module.exports = function() {
 
-    var _module, _clazz;
+    var _stack = [];
 
     return {
-        getModule: getModule,
-        setModule: setModule,
-        getClass: getClass,
-        setClass: setClass,
-        getCurrentContext: getCurrentContext
+        isLast: isLast,
+        peak: peak,
+        push: push,
+        pop: pop
     };
 
-    function getModule() {
-        return _module;
+    function isLast() {
+        return _stack.length === 1;
     }
 
-    function setModule(module) {
-        _module = module;
+    function peak() {
+        return _stack[_stack.length - 1];
     }
 
-    function getClass() {
-        return _clazz;
+    function push(item) {
+        _stack.push(item);
     }
 
-    function setClass(module) {
-        _clazz = module;
+    function pop() {
+        return _stack.pop();
     }
-
-    function getCurrentContext() {
-        if(getClass()) {
-            return getClass().getMethods();
-        } else if(getModule()) {
-            return getModule().getClasses();
-        }
-    }
-
 }();
