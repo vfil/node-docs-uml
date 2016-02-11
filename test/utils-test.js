@@ -1,34 +1,14 @@
+'use strict';
+
 const chai = require('chai');
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 const sinon = require('sinon');
 
-const Module = require('../models/Module.js');
-const fakeData = require('./fakeData.js');
+const utils = require('../utils.js');
 
-const dataProvider = require('../data-provider.js');
-
-describe('data provider specs:', function () {
-
-    it('fetch should retrieve docs', function () {
-        const indexUrl = 'https://test.me/index.json';
-        const moduleUrl = 'https://test.me/http.json';
-        const expectedResult = [new Module(fakeData.moduleUrlResponse.modules[0])];
-
-        const fetchUrlStub = sinon.stub(dataProvider, 'fetchUrl');
-        fetchUrlStub.withArgs(indexUrl)
-          .returns(Promise.resolve(JSON.stringify(fakeData.indexUrlResponse)));
-        fetchUrlStub.withArgs(moduleUrl)
-          .returns(Promise.resolve(JSON.stringify(fakeData.moduleUrlResponse)));
-
-        return expect(dataProvider.fetch(indexUrl)).to.eventually.eql(expectedResult).then(() => {
-            console.log('restoring stub...');
-            fetchUrlStub.restore();
-        })
-
-
-    });
+describe('utils specs:', function () {
 
     it('fetchUrl should fetch response from url', function () {
         const https = require('https');
@@ -48,7 +28,7 @@ describe('data provider specs:', function () {
 
         const expectedUrl = 'https://test.me';
 
-        return expect(dataProvider.fetchUrl(expectedUrl)).to.eventually.equal(expectedResponse).then(() => {
+        return expect(utils.fetchUrl(expectedUrl)).to.eventually.equal(expectedResponse).then(() => {
             expect(httpRequestStub.calledWith(expectedUrl), 'called with right args').to.equal(true);
             httpRequestStub.restore();
         });

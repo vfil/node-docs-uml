@@ -1,6 +1,8 @@
+'use strict';
+
 module.exports = function() {
 
-    var _stack = [];
+    let _stack = [];
 
     return {
         isLast: isLast,
@@ -24,4 +26,4 @@ module.exports = function() {
     function pop() {
         return _stack.pop();
     }
-}();
+};

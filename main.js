@@ -1,16 +1,18 @@
-//TODO Unit Tests???
+'use strict';
 
 const readline = require('readline');
 
-const dataProvider = require('./data-provider.js');
+const DataProvider = require('./DataProvider.js');
 const indexUrl = 'https://nodejs.org/dist/latest-v5.x/docs/api/index.json';
+
+const options = {local: true, store: true};
+const dataProvider = DataProvider(options);
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
     completer: function (input) {
-        const suggestion = input || '';
-        return [dataProvider.getSuggestions(suggestion), input];
+        return [dataProvider.getSuggestions(input), input];
     }
 });
 
@@ -21,7 +23,7 @@ dataProvider.fetch(indexUrl).then(() => {
     rl.on('line', (input) => {
         const item = dataProvider.matchContext(input);
         if (item) {
-            if (item.getType() === 'method') {
+            if (!item.isNavigable()) {
                 console.log(item.getDescription());
             } else {
                 rl.setPrompt(item.getName() + '>');

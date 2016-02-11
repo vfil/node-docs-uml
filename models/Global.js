@@ -1,17 +1,20 @@
-const Global = function (modules) {
-    this._modules = modules;
+'use strict';
+
+const Item = require('./Item.js');
+const ItemTypes = require('./ItemTypes.js');
+
+const Global = function (rawModules) {
+    const rawItem = {
+        type: 'global',
+        name: 'Global',
+        modules: rawModules
+    };
+
+    const subtypes = [ ItemTypes.MODULES ];
+    Item.call(this, rawItem, subtypes);
 };
 
-Global.prototype.getSubtypes = function () {
-    return this._modules;
-};
-
-Global.prototype.getType = function () {
-    return 'global';
-};
-
-Global.prototype.getName = function () {
-    return 'Global';
-};
+Global.prototype = Object.create(Item.prototype);
+Global.prototype.constructor = Global;
 
 module.exports = Global;

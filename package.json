@@ -2,7 +2,7 @@
   "name": "node-docs-uml",
   "version": "1.0.0",
   "description": "Nodejs uml based on docs.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec",
     "integration": "./node_modules/.bin/mocha ./integration/integration.js --reporter spec"
@@ -27,5 +27,8 @@
     "chai-as-promised": "^5.2.0",
     "mocha": "^2.4.5",
     "sinon": "^1.17.3"
+  },
+  "dependencies": {
+    "html-entities": "^1.2.0"
   }
 }

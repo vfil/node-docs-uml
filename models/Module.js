@@ -1,39 +1,18 @@
-const Clazz = require('./Clazz');
-const Method = require('./Method');
-const AbstractItem = require('./AbstractItem.js');
+'use strict';
 
-var Module = function(rawModule) {
-    AbstractItem.call(this, rawModule);
+const Item = require('./Item.js');
+const ItemTypes = require('./ItemTypes.js');
+
+const Module = function(rawModule) {
+    const subtypes = [
+        ItemTypes.CLASSES,
+        ItemTypes.METHODS,
+        ItemTypes.PROPERTIES
+    ];
+    Item.call(this, rawModule, subtypes);
 };
 
-Module.prototype = Object.create(AbstractItem.prototype);
-
-Module.prototype.getName = function() {
-    return this._rawItem.displayName || this._rawItem.name;
-};
-
-Module.prototype.getClasses = function() {
-
-    if(!this._rawItem.classes) return [];
-
-    return this._rawItem.classes.map((rawClazz) => {
-        return new Clazz(rawClazz);
-    });
-};
-
-Module.prototype.getMethods = function() {
-
-    if(!this._rawItem.methods) return [];
-
-    return this._rawItem.methods.map((rawMethod) => {
-        return new Method(rawMethod);
-    });
-};
-
-Module.prototype.getSubtypes = function() {
-    return this.getMethods().concat(this.getClasses());
-};
-
+Module.prototype = Object.create(Item.prototype);
 Module.prototype.constructor = Module;
 
 module.exports = Module;
