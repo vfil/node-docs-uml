@@ -5,7 +5,7 @@ const readline = require('readline');
 const DataProvider = require('./DataProvider.js');
 const indexUrl = 'https://nodejs.org/dist/latest-v5.x/docs/api/index.json';
 
-const options = {local: true, store: true};
+const options = {local: false, store: true};
 const dataProvider = DataProvider(options);
 
 const rl = readline.createInterface({
@@ -26,7 +26,7 @@ dataProvider.fetch(indexUrl).then(() => {
             if (!item.isNavigable()) {
                 console.log(item.getDescription());
             } else {
-                rl.setPrompt(item.getName() + '>');
+                rl.setPrompt(dataProvider.getContextName() + '>');
             }
         } else {
             console.log('Try TAB for suggestions!');

@@ -2,14 +2,14 @@
 
 const Item = require('./Item.js');
 
-var Property = function(rawProperty) {
+var Property = function (rawProperty) {
     Item.call(this, rawProperty, [], false);
 };
 
 Property.prototype = Object.create(Item.prototype);
 Property.prototype.constructor = Property;
 
-Property.prototype.getName = function() {
+Property.prototype.getName = function () {
     return this._rawItem.textRaw;
 };
 

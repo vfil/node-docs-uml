@@ -24,11 +24,12 @@ module.exports = function (options) {
         getContextName: getContextName
     };
 
+    //TODO you say TDD???
     function fetch(url) {
         if (options.local) {
             return localFetch();
         } else {
-            return remoteFetch(url).catch((err) => {
+            return remoteFetch(url).catch(err => {
                 return localFetch();
             });
         }
@@ -47,7 +48,7 @@ module.exports = function (options) {
             item = findExactMatch(matches, input);
         }
 
-        if (item && item.getType() !== 'method') {
+        if (item && item.isNavigable()) {
             _context.push(item);
         }
 
@@ -55,7 +56,7 @@ module.exports = function (options) {
     }
 
     function getSuggestions(input) {
-        return itemMatcher(input).map((item) => {
+        return itemMatcher(input).map(item => {
             return item.getName();
         });
     }
@@ -74,22 +75,22 @@ module.exports = function (options) {
     }
 
     function remoteFetch(url) {
-        return utils.fetchUrl(url).then((response) => {
+        return utils.fetchUrl(url).then(response => {
             const urls = extractUrls(JSON.parse(response));
 
             //grab all docs resources as promises
-            const promises = urls.map((slug) => {
-                return utils.fetchUrl(buildUrlFromSlug(slug, url)).then((section) => {
+            const promises = urls.map(slug => {
+                return utils.fetchUrl(buildUrlFromSlug(slug, url)).then(section => {
                     section = JSON.parse(section);
                     return section.modules || [];
                 });
             });
 
             //wait until all promises are resolved and flatten
-            return batchPromises(promises).then((result) => {
+            return batchPromises(promises).then(result => {
                 const globalModules = flatten(result);
-                if(options.store) {
-                    fs.writeFile(_filePath, JSON.stringify(globalModules), function (err) {
+                if (options.store) {
+                    fs.writeFile(_filePath, JSON.stringify(globalModules), err => {
                         if (err) throw err;
                         _fileUpdated = true;
                     });
@@ -103,20 +104,20 @@ module.exports = function (options) {
     function itemMatcher(input) {
         input = toLowerCaseOrEmpty(input);
         const container = _context.peak();
-        return matchItem(container, input, function (item, input) {
+        return matchItem(container, input, (item, input) => {
             return item.getName().toLowerCase().startsWith(input);
         });
     }
 
     function matchItem(container, input, matcher) {
-        return container.getSubtypes().filter((item) => {
+        return container.getSubtypes().filter(item => {
             return matcher(item, input);
         });
     }
 
     function findExactMatch(arr, name) {
         name = toLowerCaseOrEmpty(name);
-        return arr.find((item) => {
+        return arr.find(item => {
             const itemName = item.getName().toLowerCase();
             return itemName === name;
         });
@@ -157,12 +158,12 @@ module.exports = function (options) {
         var ready = Promise.resolve(null);
 
         //serialize promises result, after all completed return accumulator
-        promises.forEach((promise) => {
+        promises.forEach(promise => {
             ready = ready
               .then(() => {
                   return promise;
               })
-              .then((value) => {
+              .then(value => {
                   accumulator.push(value);
               });
         });

@@ -1,16 +1,17 @@
 'use strict';
+
 const expect = require('chai').expect
 const Context = require('../models/Context.js');
 
-describe('Context specs:', function() {
+describe('Context specs:', function () {
 
     let context;
 
-    beforeEach(function() {
+    beforeEach(function () {
         context = Context();
     });
 
-    it('.isLast should return false if context stack has only one item, otherwise false', function() {
+    it('.isLast should return false if context stack has only one item, otherwise false', function () {
         expect(context.isLast(), 'empty stack').to.equal(false);
         context.push(1);
         expect(context.isLast(), 'one element').to.equal(true);
@@ -20,7 +21,7 @@ describe('Context specs:', function() {
         expect(context.isLast(), 'one element after pop').to.equal(true);
     });
 
-    it('.peak/.push should return last added element and respectively add item on stack top', function() {
+    it('.peak/.push should return last added element and respectively add item on stack top', function () {
         expect(context.peak(), 'empty stack').to.equal(undefined);
         context.push(1);
         expect(context.peak(), 'one element').to.equal(1);
@@ -30,7 +31,7 @@ describe('Context specs:', function() {
         expect(context.peak(), 'one element after pop').to.equal(1);
     });
 
-    it('.pop should remove and return top item of stack', function() {
+    it('.pop should remove and return top item of stack', function () {
         let item = context.pop();
         expect(item).to.equal(undefined);
         context.push(1);

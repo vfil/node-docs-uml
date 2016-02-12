@@ -7,7 +7,7 @@ const ItemTypes = require('../models/ItemTypes.js');
 const FakeData = require('./fakeData.js');
 const utils = require('../utils.js');
 
-describe('Item specs:', function() {
+describe('Item specs:', function () {
 
     var item;
     var fakeModule;
@@ -18,13 +18,13 @@ describe('Item specs:', function() {
         ItemTypes.PROPERTIES
     ];
 
-    beforeEach(function() {
+    beforeEach(function () {
 
         fakeModule = FakeData().moduleUrlResponse.modules[0];
         item = new Item(fakeModule, subtypes);
     });
 
-    it('.isNavigable should determine if we can go inside this item', function() {
+    it('.isNavigable should determine if we can go inside this item', function () {
         //when all fields are not empty
         expect(item.isNavigable(), 'All fields populated').to.equal(true);
 
@@ -46,19 +46,19 @@ describe('Item specs:', function() {
         expect(item.isNavigable(), 'without any subtypes defined').to.equal(false);
     });
 
-    it('.getType should return item type', function() {
+    it('.getType should return item type', function () {
         expect(item.getType()).to.equal('module');
     });
 
-    it('.getName should return module name', function() {
+    it('.getName should return module name', function () {
         expect(item.getName()).to.equal(fakeModule.name);
     });
 
-    it('.getDescription should return item description', function() {
+    it('.getDescription should return item description', function () {
         expect(item.getDescription()).to.equal(utils.htmlDecode(fakeModule.desc));
     });
 
-    it('.getSubtypes should return item relevant subtypes', function() {
+    it('.getSubtypes should return item relevant subtypes', function () {
         const subitems = item.getSubtypes();
 
         expect(subitems.length).to.equal(8);
@@ -68,13 +68,13 @@ describe('Item specs:', function() {
             property: 0
         };
         counts = subitems.reduce((prev, next) => {
-            if((next.getType())) {
+            if ((next.getType())) {
                 counts[next.getType()]++;
             }
             return counts;
         }, counts);
 
-        expect(counts).to.eql({ class: 1, method: 4, property: 0 });
+        expect(counts).to.eql({class: 1, method: 4, property: 0});
 
     });
 });

@@ -317,14 +317,48 @@ module.exports = function () {
                     "name": "https",
                     "stability": 2,
                     "stabilityText": "Stable",
-                    "desc": "test desc"
+                    "desc": "test desc",
+                    "properties": [
+                        {
+                            "textRaw": "`METHODS` {Array} ",
+                            "name": "METHODS",
+                            "desc": "<p>A list of the HTTP methods that are supported by the parser.\n\n</p>\n"
+                        },
+                        {
+                            "textRaw": "`STATUS_CODES` {Object} ",
+                            "name": "STATUS_CODES",
+                            "desc": "<p>A collection of all the standard HTTP response status codes, and the\nshort description of each.  For example, <code>http.STATUS_CODES[404] === &#39;Not\nFound&#39;</code>.\n\n</p>\n"
+                        },
+                        {
+                            "textRaw": "http.globalAgent",
+                            "name": "globalAgent",
+                            "desc": "<p>Global instance of Agent which is used as the default for all http client\nrequests.\n\n</p>\n"
+                        }
+                    ],
                 },
                 {
                     "textRaw": "Assert",
                     "name": "assert",
                     "stability": 2,
                     "stabilityText": "Stable",
-                    "desc": "test desc"
+                    "desc": "test desc",
+                    "properties": [
+                        {
+                            "textRaw": "`METHODS` {Array} ",
+                            "name": "METHODS",
+                            "desc": "<p>A list of the HTTP methods that are supported by the parser.\n\n</p>\n"
+                        },
+                        {
+                            "textRaw": "`STATUS_CODES` {Object} ",
+                            "name": "STATUS_CODES",
+                            "desc": "<p>A collection of all the standard HTTP response status codes, and the\nshort description of each.  For example, <code>http.STATUS_CODES[404] === &#39;Not\nFound&#39;</code>.\n\n</p>\n"
+                        },
+                        {
+                            "textRaw": "http.globalAgent",
+                            "name": "globalAgent",
+                            "desc": "<p>Global instance of Agent which is used as the default for all http client\nrequests.\n\n</p>\n"
+                        }
+                    ],
                 },
             ]
         }

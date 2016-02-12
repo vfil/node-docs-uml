@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec",
-    "integration": "./node_modules/.bin/mocha ./integration/integration.js --reporter spec"
+    "integration-remote": "./node_modules/.bin/mocha ./integration/integration-remote.js --reporter spec",
+    "integration-local": "./node_modules/.bin/mocha ./integration/integration-local.js --reporter spec"
   },
   "repository": {
     "type": "git",

@@ -3,7 +3,7 @@
 const Item = require('./Item.js');
 const ItemTypes = require('./ItemTypes.js');
 
-const Module = function(rawModule) {
+const Module = function (rawModule) {
     const subtypes = [
         ItemTypes.CLASSES,
         ItemTypes.METHODS,

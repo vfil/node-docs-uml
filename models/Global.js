@@ -10,7 +10,7 @@ const Global = function (rawModules) {
         modules: rawModules
     };
 
-    const subtypes = [ ItemTypes.MODULES ];
+    const subtypes = [ItemTypes.MODULES];
     Item.call(this, rawItem, subtypes);
 };
 

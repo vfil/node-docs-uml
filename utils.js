@@ -5,7 +5,7 @@ const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
 
 module.exports = {
-    fetchUrl: function(url) {
+    fetchUrl: function (url) {
         return new Promise(function (resolve, reject) {
             var body = '';
 

@@ -4,33 +4,56 @@ const chai = require('chai');
 const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 const expect = chai.expect;
-const sinon = require('sinon');
 
-const utils = require('../utils.js');
-const fakeData = require('./fakeData.js')();
 const DataProvider = require('../DataProvider.js');
 
-describe('data provider specs:', function () {
+describe('integration tests local docs:', function () {
 
-    let indexUrl,
-      fetchUrlStub,
-      dataProvider;
+    this.timeout(10000);
+
+    const indexUrl = 'https://nodejs.org/dist/latest-v5.x/docs/api/index.json';
+    let dataProvider;
+
+    const globalModules = [
+        "assert",
+        "buffer",
+        "addons",
+        "child_process",
+        "cluster",
+        "console",
+        "crypto",
+        "dns",
+        "domain",
+        "Events",
+        "fs",
+        "http",
+        "https",
+        "module",
+        "net",
+        "os",
+        "path",
+        "punycode",
+        "querystring",
+        "readline",
+        "repl",
+        "stream",
+        "stringdecoder",
+        "timers",
+        "tls_(ssl)",
+        "tty",
+        "dgram",
+        "url",
+        "util",
+        "v8",
+        "vm",
+        "zlib"
+    ];
 
     beforeEach(function () {
-        indexUrl = 'https://test.me/index.json';
-        const moduleUrl = 'https://test.me/http.json';
-        fetchUrlStub = sinon.stub(utils, 'fetchUrl');
-        fetchUrlStub.withArgs(indexUrl)
-          .returns(Promise.resolve(JSON.stringify(fakeData.indexUrlResponse)));
-        fetchUrlStub.withArgs(moduleUrl)
-          .returns(Promise.resolve(JSON.stringify(fakeData.moduleUrlResponse)));
-        const options = {local: false, store: false};
+        const options = {local: true, store: false};
         dataProvider = DataProvider(options);
     });
 
-    afterEach(function () {
-        fetchUrlStub.restore();
-    });
 
     it('.fetch should retrieve docs', function () {
         return expect(dataProvider.fetch(indexUrl)).to.be.fulfilled.then(() => {
@@ -88,8 +111,8 @@ describe('data provider specs:', function () {
 
     it('.getSuggestions should return all items from context when empty input', function () {
         return expect(dataProvider.fetch(indexUrl)).to.be.fulfilled.then(() => {
-            expect(dataProvider.getSuggestions('')).to.eql(['http', 'https', 'assert']);
-            expect(dataProvider.getSuggestions()).to.eql(['http', 'https', 'assert']);
+            expect(dataProvider.getSuggestions('')).to.eql(globalModules);
+            expect(dataProvider.getSuggestions()).to.eql(globalModules);
         });
     });
 });

@@ -10,7 +10,7 @@ const utils = require('../utils.js');
 
 describe('utils specs:', function () {
 
-    it('fetchUrl should fetch response from url', function () {
+    it('.fetchUrl should fetch response from url', function () {
         const https = require('https');
         var PassThrough = require('stream').PassThrough;
 
@@ -32,5 +32,9 @@ describe('utils specs:', function () {
             expect(httpRequestStub.calledWith(expectedUrl), 'called with right args').to.equal(true);
             httpRequestStub.restore();
         });
+    });
+
+    it('.htmlDecode should decode html entities', function () {
+        expect(utils.htmlDecode(('&quot;&amp;&copy;&reg;'))).to.equal('"&©®');
     });
 });
