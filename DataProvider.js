@@ -9,8 +9,8 @@ const Global = require('./models/Global.js');
 module.exports = function (options) {
 
     options = Object.assign({
-        local: false,
-        store: true
+        local: false, //fetch data remotely - false, use local cached version - true
+        store: true  //Asynchronously store a cached copy after remotely fetching docs for later use.
     }, options);
 
     const _context = require('./models/Context.js')();

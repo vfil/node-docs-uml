@@ -42,7 +42,7 @@ Executes a functional test suite which is fetching data remotely.
 npm run integration-remote
 ```
 
-Executes a functional test using cached data.
+Executes a functional test suite using cached data.
 ```
 npm run integration-local
 ```
