@@ -1,6 +1,7 @@
 # node-docs-uml
 
 A fun way to interact with node js docs in your favorite shell.
+![](https://www.dropbox.com/s/hd78866mxyo6ber/out3.gif?dl=0)
 
 Docs are cached locally so after first remote fetch, you can browse docs offline.
 By default node-docs-uml will try to fetch docs remotely, 
