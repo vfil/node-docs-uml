@@ -4,30 +4,28 @@ const https = require('https');
 const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
 
-module.exports = {
-    fetchUrl: function (url) {
-        return new Promise(function (resolve, reject) {
-            var body = '';
+exports.fetchUrl = function (url) {
+    return new Promise(function (resolve, reject) {
+        var body = '';
 
-            const req = https.request(url, function (res) {
-                res.on('data', function (data) {
-                    body += data;
-                });
-
-                res.on('end', function () {
-                    resolve(body);
-                });
+        const req = https.request(url, function (res) {
+            res.on('data', function (data) {
+                body += data;
             });
 
-            req.on('error', function () {
-                reject(new Error(url + ' fetching failed!!!'));
+            res.on('end', function () {
+                resolve(body);
             });
-
-            req.end();
         });
-    },
-    htmlDecode(str) {
-        return entities.decode(str)
-          .replace(/(\[)?<[^>]*>(\])?/g, '');
-    }
+
+        req.on('error', function () {
+            reject(new Error(url + ' fetching failed!!!'));
+        });
+
+        req.end();
+    });
+};
+exports.htmlDecode = function (str) {
+    return entities.decode(str)
+      .replace(/(\[)?<[^>]*>(\])?/g, '');
 };
